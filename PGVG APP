@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPVGWAMBNR</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.3/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <div class="container mx-auto p-4 flex-grow">
+        <h1 class="text-3xl text-center font-bold mb-6">PPVGWAMBNR</h1>
+        <form id="entry-form" class="bg-white shadow-md rounded p-6">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <input type="text" id="name" placeholder="Name Of the Member" class="input-field">
+                <input type="text" id="fatherName" placeholder="Father's Name" class="input-field">
+                <input type="text" id="profession" placeholder="PG/VG Profession" class="input-field">
+                <input type="date" id="dob" placeholder="Date Of Birth" class="input-field">
+                <input type="text" id="studioAddress" placeholder="Studio Address" class="input-field">
+                <input type="text" id="village" placeholder="Village / Town" class="input-field">
+                <input type="tel" id="mobile" placeholder="Mobile No" class="input-field">
+                <input type="text" id="aadhar" placeholder="Aadhar No" class="input-field">
+                <input type="text" id="nominee" placeholder="Nominee" class="input-field">
+                <input type="text" id="nomineeAadhar" placeholder="Nominee Aadhar No" class="input-field">
+                <input type="text" id="kutumbaBharosa" placeholder="Kutumba Bharosa No" class="input-field">
+                <input type="number" step="0.01" id="paidAmount" placeholder="Paid Amount" class="input-field">
+                <input type="number" step="0.01" id="availableAmount" placeholder="Available Amount" class="input-field">
+                <input type="text" id="runningKb" placeholder="Running KB no" class="input-field">
+            </div>
+            <button type="submit" class="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                Submit
+            </button>
+        </form>
+
+        <div id="output" class="mt-8 p-4 bg-gray-200 rounded shadow-md"></div>
+    </div>
+
+    <footer class="bg-gray-800 text-white p-4 text-center">
+        <a href="https://sathyammaster.com" target="_blank">Made with Sathyam Master</a>
+    </footer>
+
+    <script>
+        document.getElementById('entry-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const fatherName = document.getElementById('fatherName').value;
+            const profession = document.getElementById('profession').value;
+            const dob = document.getElementById('dob').value;
+            const studioAddress = document.getElementById('studioAddress').value;
+            const village = document.getElementById('village').value;
+            const mobile = document.getElementById('mobile').value;
+            const aadhar = document.getElementById('aadhar').value;
+            const nominee = document.getElementById('nominee').value;
+            const nomineeAadhar = document.getElementById('nomineeAadhar').value;
+            const kutumbaBharosa = document.getElementById('kutumbaBharosa').value;
+            const paidAmount = document.getElementById('paidAmount').value;
+            const availableAmount = document.getElementById('availableAmount').value;
+            const runningKb = document.getElementById('runningKb').value;
+
+            const substitutedPrompt = `Generate a PPVGWAMBNR app entry prompt for a new member with Name Of the Member as ${name}, Father's Name as ${fatherName}, PG/VG Profession as ${profession}, Date Of Birth as ${dob}, Studio Address as ${studioAddress}, Village / Town as ${village}, Mobile No as ${mobile}, Aadhar No as ${aadhar}, Nominee as ${nominee}, Nominee Aadhar No as ${nomineeAadhar}, Kutumba Bharosa No as ${kutumbaBharosa}, Paid Amount as ${paidAmount}, Available Amount as ${availableAmount}, Running KB no as ${runningKb}.`;
+
+            const output = document.getElementById("output");
+            output.innerText = '';
+
+            let websocket = new WebSocket('wss://backend.buildpicoapps.com/ask_ai_streaming_v2');
+            
+            websocket.addEventListener("open", () => {
+                websocket.send(
+                    JSON.stringify({
+                        appId: "really-report",
+                        prompt: substitutedPrompt,
+                    })
+                );
+            });
+
+            websocket.addEventListener("message", (event) => {
+                console.log(event.data);
+                output.innerText = `${output.innerText}${event.data}`;
+            });
+
+            websocket.addEventListener("close", (event) => {
+                console.log("Connection closed", event.code, event.reason);
+                if (event.code != 1000) {
+                    alert("Oops, we ran into an error. Refresh the page and try again.");
+                }
+            });
+
+            websocket.addEventListener("error", (error) => {
+                console.log('WebSocket error', error);
+                alert("Oops, we ran into an error. Refresh the page and try again.");
+            });
+        });
+    </script>
+</body>
+
+</html>
+```
